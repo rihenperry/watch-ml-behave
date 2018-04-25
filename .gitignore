@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+api/__pycache__/
+neuralnet/__pycache__/
+
 *.py[cod]
 *$py.class
 
@@ -13,6 +16,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+
 eggs/
 .eggs/
 lib/
@@ -21,6 +25,10 @@ parts/
 sdist/
 var/
 wheels/
+include/
+share/
+bin/
+
 *.egg-info/
 .installed.cfg
 *.egg
@@ -99,3 +107,15 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+#.env file ingore
+config/.env
+
+# user created specific ignore
+neuralnet/models
+
+# ignore image and other arbitrary test samples
+neuralnet/downloads/
+
+# ignore sql db
+api/sql.db
