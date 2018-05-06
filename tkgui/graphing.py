@@ -5,6 +5,7 @@ import numpy
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 matplotlib.use('TkAgg')
 
@@ -13,6 +14,7 @@ btm_lft_frame = None
 ax = None
 bars = None
 canvas = None
+
 
 def prediction_graph(layout_position=None, result=None):
     global btm_lft_frame, ax, canvas, bars
@@ -68,9 +70,209 @@ def update_prediction_graph(result):
     ax.yaxis.set_ticks([(10*x) for x in range(11)])
     canvas.draw()
 
-def model_performance_graph():
+
+topmost_rht_frame = None
+ax_line = None
+canvas_line = None
+lines = None
+
+
+def model_performance_graph(xy_cords=None, result=None):
+    global topmost_rht_frame, ax_line, canvas_line, lines
+
+    if xy_cords is not None:
+        topmost_rht_frame = xy_cords
+
+    x_stack = [0, 1, 2, 3, 4]
+    y_stack = []
+
+    f = plt.figure(figsize=(7.8, 2.4), dpi=95, facecolor='black',
+                   edgecolor='green')
+    ax_line = f.add_subplot(111)
+
+    if result is None:
+        y_stack = [0, 5, 2, 9, 1]
+    else:
+        y_stack = [(elm*100) for elm in result['stats']]
+
+    width = .3
+
+    lines = ax_line.plot(x_stack, y_stack, width, color='c',
+                         marker='o')
+    # ax_line.xaxis.set_ticks(x_stack)
+    plt.xticks(x_stack)
+    plt.xticks(y_stack)
+    # ax_line.yaxis.set_ticks(y_stack)
+    ax_line.spines['bottom'].set_color('c')
+    ax_line.spines['left'].set_color('c')
+    ax_line.tick_params(axis='x', colors='c')
+    ax_line.tick_params(axis='y', colors='c')
+    ax_line.set_facecolor("#000000")
+    ax_line.set_title('performance comparison')
+    ax_line.title.set_color('c')
+    ax_line.set_xlabel('model versions')
+    ax_line.xaxis.label.set_color('c')
+    ax_line.set_ylabel('accuracy')
+    ax_line.yaxis.label.set_color('c')
+    # ax_line.set_xticklabels(x_stack)
+    # ax_line.grid('on')
+    canvas_line = FigureCanvasTkAgg(f, master=topmost_rht_frame)
+    canvas_line.draw()
+    canvas_line.get_tk_widget().pack(side="left", fill="both", expand=True)
+
+
+def update_model_performance_graph():
     pass
 
 
-def model_parameter_response_graph():
-    pass
+lrp_ax = None
+lrp_canvas = None
+lrp_lines = None
+lrp_frame = None
+
+
+def lr_p_graph(xy_cords=None, result=None):
+    global lrp_frame, lrp_ax, lrp_canvas, lrp_lines
+
+    if xy_cords is not None:
+        lrp_frame = xy_cords
+
+    x_stack = [0, 1, 2, 3, 4]
+    y_stack = []
+
+    f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
+                   edgecolor='green')
+    lrp_ax = f.add_subplot(111)
+
+    if result is None:
+        y_stack = [0, 5, 2, 9, 1]
+    else:
+        y_stack = [(elm*100) for elm in result['stats']]
+
+    width = .3
+
+    lrp_lines = lrp_ax.plot(x_stack, y_stack, width, color='c',
+                            marker='o')
+    # ax_line.xaxis.set_ticks(x_stack)
+    plt.xticks(x_stack)
+    plt.xticks(y_stack)
+    # ax_line.yaxis.set_ticks(y_stack)
+    lrp_ax.spines['bottom'].set_color('c')
+    lrp_ax.spines['left'].set_color('c')
+    lrp_ax.tick_params(axis='x', colors='c')
+    lrp_ax.tick_params(axis='y', colors='c')
+    lrp_ax.set_facecolor("#000000")
+    lrp_ax.set_title('learning rate')
+    lrp_ax.title.set_color('c')
+    lrp_ax.set_xlabel('performance')
+    lrp_ax.xaxis.label.set_color('c')
+    # lrp_ax.set_ylabel('accuracy')
+    lrp_ax.yaxis.label.set_color('c')
+    # ax_line.set_xticklabels(x_stack)
+    # ax_line.grid('on')
+    lrp_canvas = FigureCanvasTkAgg(f, master=lrp_frame)
+    lrp_canvas.draw()
+    lrp_canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+
+
+epochp_ax = None
+epochp_canvas = None
+epochp_lines = None
+epochp_frame = None
+
+
+def epoch_p_graph(xy_cords=None, result=None):
+    global epochp_frame, epochp_ax, epochp_canvas, epochp_lines
+
+    if xy_cords is not None:
+        epochp_frame = xy_cords
+
+    x_stack = [0, 1, 2, 3, 4]
+    y_stack = []
+
+    f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
+                   edgecolor='green')
+    epochp_ax = f.add_subplot(111)
+
+    if result is None:
+        y_stack = [0, 5, 2, 9, 1]
+    else:
+        y_stack = [(elm*100) for elm in result['stats']]
+
+    width = .3
+
+    epochp_lines = epochp_ax.plot(x_stack, y_stack, width, color='c',
+                                  marker='o')
+    # ax_line.xaxis.set_ticks(x_stack)
+    plt.xticks(x_stack)
+    plt.xticks(y_stack)
+    # ax_line.yaxis.set_ticks(y_stack)
+    epochp_ax.spines['bottom'].set_color('c')
+    epochp_ax.spines['left'].set_color('c')
+    epochp_ax.tick_params(axis='x', colors='c')
+    epochp_ax.tick_params(axis='y', colors='c')
+    epochp_ax.set_facecolor("#000000")
+    epochp_ax.set_title('epoch')
+    epochp_ax.title.set_color('c')
+    epochp_ax.set_xlabel('performance')
+    epochp_ax.xaxis.label.set_color('c')
+    # lrp_ax.set_ylabel('accuracy')
+    epochp_ax.yaxis.label.set_color('c')
+    # ax_line.set_xticklabels(x_stack)
+    # ax_line.grid('on')
+    epochp_canvas = FigureCanvasTkAgg(f, master=epochp_frame)
+    epochp_canvas.draw()
+    epochp_canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+
+
+hnp_ax = None
+hnp_canvas = None
+hnp_lines = None
+hnp_frame = None
+
+
+def hn_p_graph(xy_cords=None, result=None):
+    global hnp_frame, hnp_ax, hnp_canvas, hnp_lines
+
+    if xy_cords is not None:
+        hnp_frame = xy_cords
+
+    x_stack = [0, 1, 2, 3, 4]
+    y_stack = []
+
+    f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
+                   edgecolor='green')
+    hnp_ax = f.add_subplot(111)
+
+    if result is None:
+        y_stack = [0, 5, 2, 9, 1]
+    else:
+        y_stack = [(elm*100) for elm in result['stats']]
+
+    width = .3
+
+    hnp_lines = hnp_ax.plot(x_stack, y_stack, width, color='c',
+                            marker='o')
+    # ax_line.xaxis.set_ticks(x_stack)
+    plt.xticks(x_stack)
+    plt.xticks(y_stack)
+    # ax_line.yaxis.set_ticks(y_stack)
+    hnp_ax.spines['bottom'].set_color('c')
+    hnp_ax.spines['left'].set_color('c')
+    hnp_ax.tick_params(axis='x', colors='c')
+    hnp_ax.tick_params(axis='y', colors='c')
+    hnp_ax.set_facecolor("#000000")
+    hnp_ax.set_title('hidden nodes')
+    hnp_ax.title.set_color('c')
+    hnp_ax.set_xlabel('performance')
+    hnp_ax.xaxis.label.set_color('c')
+    # lrp_ax.set_ylabel('accuracy')
+    hnp_ax.yaxis.label.set_color('c')
+    # ax_line.set_xticklabels(x_stack)
+    # ax_line.grid('on')
+    hnp_canvas = FigureCanvasTkAgg(f, master=hnp_frame)
+    hnp_canvas.draw()
+    hnp_canvas.get_tk_widget().pack(side="right", fill="both", expand=True)
+
+
+

@@ -110,7 +110,7 @@ def savemodel():
     # check if model name exists in db if not save else say already exist
     # get current_tuning config and dump it to database
     model_name = request.form['model_name']
-    model_name+='.pki'
+    model_name += '.pki'
     obj = helpers.get_current_tuning()
     n = list(helpers.get_active_model().keys())[0]
     obj['model_name'] = model_name
