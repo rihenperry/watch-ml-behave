@@ -7,26 +7,39 @@ import PIL
 from PIL import Image
 
 from settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
-from neuralnet.train import Model
+from neuralnet.train import Model, Learn
+from neuralnet import test
 
 live_model = {}
+current_tuning = {}
 
 
 # make a particular model active and set it as current model
-def activate_nn_model(model_name=None):
+def activate_nn_model(model=None):
     global live_model
+    model_name = None
+
+    if type(model) == dict:
+        model_name = list(model.keys())[0]
+    else:
+        model_name = model
 
     if model_name is None and 'default.pki' in live_model:
-        print('model {} is already loaded'.format('default.pki'))
-    elif model_name in live_model:
-        print('model {} is already loaded'.format(model_name))
+        print('model {0} is already loaded'.format('default.pki'))
+    elif model_name in live_model and (model_name != 'current.pki'):
+        print('model {0} is already loaded'.format(model_name))
     else:
         if model_name is None:
             live_model = {}  # empty dict by mutation, I know its bad
             mdl = Model()
             live_model['default.pki'] = mdl.load()
-            print('model {} loaded'.format(live_model))
+            print('model {0} loaded'.format(live_model))
+        elif type(model) == dict:
+            live_model = {}
+            live_model = model
+            print('model {0} loaded'.format(live_model))
         else:
+            live_model = {}
             mdl = Model(None, model_name)
             live_model[model_name] = mdl.load(model_name)
             print('model {} loaded'.format(live_model))
@@ -70,7 +83,8 @@ def predict(image_sample):
     n = get_active_model()
 
     # query the network and extract max arg
-    raw_op = n['default.pki'].query(image_sample)
+    current_model = list(n.keys())[0]
+    raw_op = n[current_model].query(image_sample)
     label = numpy.int64(numpy.argmax(raw_op)).item()
 
     md_array = numpy.array(raw_op).tolist()
@@ -79,3 +93,30 @@ def predict(image_sample):
     print('label {}, network output ={}'.format(label, percentiles))
 
     return dict(label=label, stats=percentiles)
+
+
+def set_current_tuning(obj):
+    global current_tuning
+    current_tuning = obj
+
+
+def get_current_tuning():
+    return current_tuning
+
+
+def tuneD(lr, hn, epoch):
+    lrn = Learn(lr, hn, epoch)
+    n = lrn.run()
+    test.run(n)
+    accuracy = test.results()
+
+    return {
+        'lr': lr,
+        'hidden_nodes': hn,
+        'epoch': epoch,
+        'accuracy': accuracy,
+        'current.pki': n,
+        'lr_vs_p': (str(lr) + ',' + str(accuracy)),
+        'epoch_vs_p': (str(epoch) + ',' + str(accuracy)),
+        'hn_vs_p': (str(hn) + ',' + str(accuracy))
+    }

@@ -17,11 +17,10 @@ def read_mnist_testdata():
     return test_data
 
 
-def run(model_name=None):
+def run(neural=None):
     test_data_list = read_mnist_testdata()
-    if model_name is not None:
-        mdl = Model(model_name)
-        n = mdl.load(model_name)
+    if neural is not None:
+        n = neural
     else:
         mdl = Model()
         n = mdl.load()
@@ -53,4 +52,7 @@ def run(model_name=None):
 def results():
     # calculate the performance score, the fraction of correct answers
     scorecard_array = numpy.asarray(scorecard)
-    print("performance = ", scorecard_array.sum() / scorecard_array.size)
+    performance = scorecard_array.sum() / scorecard_array.size
+    print("performance = ", performance)
+
+    return performance

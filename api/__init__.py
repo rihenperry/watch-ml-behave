@@ -14,16 +14,15 @@ endpoint = Blueprint('endpoint', __name__)
 # Configurations
 app.config.from_object('api.config')
 
+# Define the database object which is imported
+# by modules and controllers
+db = SQLAlchemy(app)
+
 # import controller
 from . import controllers
 
 # register blueprint
 app.register_blueprint(endpoint, url_prefix="/api")
-
-# Define the database object which is imported
-# by modules and controllers
-db = SQLAlchemy(app)
-
 
 # Sample HTTP error handling
 @app.errorhandler(404)

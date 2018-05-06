@@ -7,11 +7,11 @@ import settings
 
 class Learn:
     def __init__(self,
-                 in_nodes=int(os.getenv('INPUT_NODES')),
+                 lrate=float(os.getenv('LEARNING_RATE')),
                  hnodes=int(os.getenv('HIDDEN_NODES')),
-                 onodes=int(os.getenv('OUTPUT_NODES')),
                  epochs=int(os.getenv('EPOCHS')),
-                 lrate=float(os.getenv('LEARNING_RATE'))):
+                 in_nodes=int(os.getenv('INPUT_NODES')),
+                 onodes=int(os.getenv('OUTPUT_NODES'))):
         # load default model parameters
         # number of input, hidden and output nodes
         self.__input_nodes = in_nodes
