@@ -40,7 +40,16 @@ def validate_img():
         files = {'file': open(img_name, 'rb')}
 
         r = requests.post(validate_url, files=files)
-        print(r.json())
+        # print(r.json())
         update_prediction_graph(r.json())
     else:
         pass
+
+
+def load_model(var):
+    # var = lmenu.entrycget(index, 'label')
+    load_url = 'http://127.0.0.1:8080/api/model/' + str(var)
+    print('requesting url {0}'.format(load_url))
+
+    loaded_obj = requests.get(load_url).json()
+    print('active model {0}'.format(loaded_obj))

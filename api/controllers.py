@@ -112,7 +112,8 @@ def savemodel():
     model_name = request.form['model_name']
     model_name += '.pki'
     obj = helpers.get_current_tuning()
-    n = list(helpers.get_active_model().keys())[0]
+    brain_label = list(helpers.get_active_model().keys())[0]
+    brain = helpers.get_active_model()[brain_label]
     obj['model_name'] = model_name
 
     hyper = HyperParams(lr=obj['lr'],
@@ -127,7 +128,7 @@ def savemodel():
     db.session.add(graph)
     db.session.commit()
 
-    m = Model(n, model_name)
+    m = Model(brain, model_name)
     m.save()
     helpers.set_current_tuning({})
     helpers.activate_nn_model(obj['model_name'])

@@ -66,6 +66,7 @@ def update_prediction_graph(result):
     # canvas.draw()
 
     orgnl_data = [(elm*100) for elm in result['stats']]
+
     bars = ax.bar(ind, orgnl_data, width, color='green', align='center')
     ax.yaxis.set_ticks([(10*x) for x in range(11)])
     canvas.draw()
@@ -83,26 +84,25 @@ def model_performance_graph(xy_cords=None, result=None):
     if xy_cords is not None:
         topmost_rht_frame = xy_cords
 
-    x_stack = [0, 1, 2, 3, 4]
+    x_stack = []
+    x_stack_display = []
     y_stack = []
+
+    for graph in result['data']:
+        f_name = graph['model_name'].split('.')[0]
+        x_stack_display.append(f_name)
+        x_stack.append(graph['model_id'])
+        y_stack.append(graph['accuracy'])
 
     f = plt.figure(figsize=(7.8, 2.4), dpi=95, facecolor='black',
                    edgecolor='green')
     ax_line = f.add_subplot(111)
 
-    if result is None:
-        y_stack = [0, 5, 2, 9, 1]
-    else:
-        y_stack = [(elm*100) for elm in result['stats']]
-
     width = .3
+    lines = ax_line.errorbar(x_stack, y_stack, width, color='c')
 
-    lines = ax_line.plot(x_stack, y_stack, width, color='c',
-                         marker='o')
-    # ax_line.xaxis.set_ticks(x_stack)
-    plt.xticks(x_stack)
-    plt.xticks(y_stack)
-    # ax_line.yaxis.set_ticks(y_stack)
+    ax_line.yaxis.set_ticks([(elm/10) for elm in range(0, 11)])
+    ax_line.set_xticks(x_stack)
     ax_line.spines['bottom'].set_color('c')
     ax_line.spines['left'].set_color('c')
     ax_line.tick_params(axis='x', colors='c')
@@ -110,11 +110,12 @@ def model_performance_graph(xy_cords=None, result=None):
     ax_line.set_facecolor("#000000")
     ax_line.set_title('performance comparison')
     ax_line.title.set_color('c')
+    ax_line.grid(color='w', linestyle='dotted', axis='y', linewidth=0.5)
     ax_line.set_xlabel('model versions')
     ax_line.xaxis.label.set_color('c')
     ax_line.set_ylabel('accuracy')
     ax_line.yaxis.label.set_color('c')
-    # ax_line.set_xticklabels(x_stack)
+    ax_line.set_xticklabels(x_stack_display)
     # ax_line.grid('on')
     canvas_line = FigureCanvasTkAgg(f, master=topmost_rht_frame)
     canvas_line.draw()
@@ -137,38 +138,36 @@ def lr_p_graph(xy_cords=None, result=None):
     if xy_cords is not None:
         lrp_frame = xy_cords
 
-    x_stack = [0, 1, 2, 3, 4]
+    x_stack = []
     y_stack = []
+
+    for graph in result['data']:
+        lr = round(float(graph['lr_vs_p'].split(',')[0]), 2)
+        p = float(graph['lr_vs_p'].split(',')[1])
+        x_stack.append(lr)
+        y_stack.append(p)
 
     f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
                    edgecolor='green')
     lrp_ax = f.add_subplot(111)
 
-    if result is None:
-        y_stack = [0, 5, 2, 9, 1]
-    else:
-        y_stack = [(elm*100) for elm in result['stats']]
-
     width = .3
 
-    lrp_lines = lrp_ax.plot(x_stack, y_stack, width, color='c',
+    lrp_lines = lrp_ax.plot(x_stack, y_stack, width, linestyle='dashed', color='c',
                             marker='o')
-    # ax_line.xaxis.set_ticks(x_stack)
-    plt.xticks(x_stack)
-    plt.xticks(y_stack)
-    # ax_line.yaxis.set_ticks(y_stack)
+    ax_line.set_yticklabels([(elm/10) for elm in range(0, 11)])
     lrp_ax.spines['bottom'].set_color('c')
     lrp_ax.spines['left'].set_color('c')
     lrp_ax.tick_params(axis='x', colors='c')
     lrp_ax.tick_params(axis='y', colors='c')
     lrp_ax.set_facecolor("#000000")
-    lrp_ax.set_title('learning rate')
+    lrp_ax.set_title('learning rate vs p')
     lrp_ax.title.set_color('c')
-    lrp_ax.set_xlabel('performance')
+    lrp_ax.grid(color='w', linestyle='dotted', linewidth=0.5)
+    lrp_ax.set_ylabel('performance')
     lrp_ax.xaxis.label.set_color('c')
-    # lrp_ax.set_ylabel('accuracy')
     lrp_ax.yaxis.label.set_color('c')
-    # ax_line.set_xticklabels(x_stack)
+    lrp_ax.set_xticklabels([(elm/10) for elm in range(0, 11)])
     # ax_line.grid('on')
     lrp_canvas = FigureCanvasTkAgg(f, master=lrp_frame)
     lrp_canvas.draw()
@@ -187,38 +186,37 @@ def epoch_p_graph(xy_cords=None, result=None):
     if xy_cords is not None:
         epochp_frame = xy_cords
 
-    x_stack = [0, 1, 2, 3, 4]
+    x_stack = []
     y_stack = []
+
+    for graph in result['data']:
+        epoch = int(graph['epoch_vs_p'].split(',')[0])
+        p = float(graph['epoch_vs_p'].split(',')[1])
+        x_stack.append(epoch)
+        y_stack.append(p)
 
     f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
                    edgecolor='green')
     epochp_ax = f.add_subplot(111)
 
-    if result is None:
-        y_stack = [0, 5, 2, 9, 1]
-    else:
-        y_stack = [(elm*100) for elm in result['stats']]
-
     width = .3
 
-    epochp_lines = epochp_ax.plot(x_stack, y_stack, width, color='c',
+    epochp_lines = epochp_ax.plot(x_stack, y_stack, width, linestyle='dashed', color='c',
                                   marker='o')
-    # ax_line.xaxis.set_ticks(x_stack)
-    plt.xticks(x_stack)
-    plt.xticks(y_stack)
-    # ax_line.yaxis.set_ticks(y_stack)
+
+    epochp_ax.xaxis.set_ticks([(5*elm) for elm in range(0, 5)])
+    epochp_ax.yaxis.set_ticks([(elm/10) for elm in range(0, 11)])
     epochp_ax.spines['bottom'].set_color('c')
     epochp_ax.spines['left'].set_color('c')
     epochp_ax.tick_params(axis='x', colors='c')
     epochp_ax.tick_params(axis='y', colors='c')
     epochp_ax.set_facecolor("#000000")
-    epochp_ax.set_title('epoch')
+    epochp_ax.set_title('epoch vs p')
     epochp_ax.title.set_color('c')
-    epochp_ax.set_xlabel('performance')
+    epochp_ax.grid(color='w', linestyle='dotted', linewidth=0.5)
+    epochp_ax.set_ylabel('performance')
     epochp_ax.xaxis.label.set_color('c')
-    # lrp_ax.set_ylabel('accuracy')
     epochp_ax.yaxis.label.set_color('c')
-    # ax_line.set_xticklabels(x_stack)
     # ax_line.grid('on')
     epochp_canvas = FigureCanvasTkAgg(f, master=epochp_frame)
     epochp_canvas.draw()
@@ -237,38 +235,36 @@ def hn_p_graph(xy_cords=None, result=None):
     if xy_cords is not None:
         hnp_frame = xy_cords
 
-    x_stack = [0, 1, 2, 3, 4]
+    x_stack = []
     y_stack = []
+
+    for graph in result['data']:
+        hn = int(graph['hn_vs_p'].split(',')[0])
+        p = float(graph['hn_vs_p'].split(',')[1])
+        x_stack.append(hn)
+        y_stack.append(p)
 
     f = plt.figure(figsize=(3, 2.5), dpi=80, facecolor='black',
                    edgecolor='green')
     hnp_ax = f.add_subplot(111)
 
-    if result is None:
-        y_stack = [0, 5, 2, 9, 1]
-    else:
-        y_stack = [(elm*100) for elm in result['stats']]
-
     width = .3
 
-    hnp_lines = hnp_ax.plot(x_stack, y_stack, width, color='c',
+    hnp_lines = hnp_ax.plot(x_stack, y_stack, width, linestyle='dashed', color='c',
                             marker='o')
-    # ax_line.xaxis.set_ticks(x_stack)
-    plt.xticks(x_stack)
-    plt.xticks(y_stack)
-    # ax_line.yaxis.set_ticks(y_stack)
+    hnp_ax.xaxis.set_ticks([(100*elm) for elm in range(0, 7)])
+    hnp_ax.yaxis.set_ticks([(elm/10) for elm in range(0, 11)])
     hnp_ax.spines['bottom'].set_color('c')
     hnp_ax.spines['left'].set_color('c')
     hnp_ax.tick_params(axis='x', colors='c')
     hnp_ax.tick_params(axis='y', colors='c')
     hnp_ax.set_facecolor("#000000")
-    hnp_ax.set_title('hidden nodes')
+    hnp_ax.set_title('hidden nodes vs p')
     hnp_ax.title.set_color('c')
-    hnp_ax.set_xlabel('performance')
+    hnp_ax.grid(color='w', linestyle='dotted', linewidth=0.5)
+    hnp_ax.set_ylabel('performance')
     hnp_ax.xaxis.label.set_color('c')
-    # lrp_ax.set_ylabel('accuracy')
     hnp_ax.yaxis.label.set_color('c')
-    # ax_line.set_xticklabels(x_stack)
     # ax_line.grid('on')
     hnp_canvas = FigureCanvasTkAgg(f, master=hnp_frame)
     hnp_canvas.draw()

@@ -1,11 +1,20 @@
 import requests
 from tkinter import *
 from tkinter import ttk
+from functools import partial
 
 import extendedgui
 from graphing import prediction_graph, model_performance_graph
 from graphing import lr_p_graph, epoch_p_graph, hn_p_graph
+from actions import load_model
 
+# variables
+pool_response = None
+
+# get resources in advance
+init_url = 'http://127.0.0.1:8080/api/'
+print('init request url {0}'.format(init_url))
+pool_response = requests.get(init_url).json()
 
 # -- root window
 root = Tk()
@@ -46,18 +55,18 @@ prediction_graph(bottom_lft_frame)
 
 
 top_rht_frame = ttk.Frame(master_frame, relief="groove", borderwidth=2, width=750, height=232)
-model_performance_graph(top_rht_frame)
+model_performance_graph(top_rht_frame, pool_response)
 
 mid_rht_frame = ttk.Frame(master_frame, relief="groove", borderwidth=2, width=750, height=232)
 
 lr_vs_p_frame = ttk.Frame(mid_rht_frame, relief="groove", borderwidth=1, width=250, height=232)
-lr_p_graph(lr_vs_p_frame)
+lr_p_graph(lr_vs_p_frame, pool_response)
 
 epoch_vs_p_frame = ttk.Frame(mid_rht_frame, relief="groove", borderwidth=1, width=250, height=232)
-epoch_p_graph(epoch_vs_p_frame)
+epoch_p_graph(epoch_vs_p_frame, pool_response)
 
 hn_vs_p_frame = ttk.Frame(mid_rht_frame, relief="groove", borderwidth=1, width=250, height=232)
-hn_p_graph(hn_vs_p_frame)
+hn_p_graph(hn_vs_p_frame, pool_response)
 
 bottom_rht_frame = ttk.Frame(master_frame, relief="groove", borderwidth=2, width=750, height=290)
 bottom_rht_frame.rowconfigure(0, weight=1)
@@ -101,21 +110,30 @@ menubar = Menu(root)
 
 # menu options
 optmenu = Menu(menubar, tearoff=0)
-optmenu.add_command(label='save model', command=None)
-optmenu.add_command(label='load model', command=None)
-optmenu.add_command(label='exit', command=root.quit)
+loadmenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label='options', menu=optmenu)
 
+if pool_response:
+    blob_list = pool_response['data']
+    current_model = pool_response['current_model']
+
+    optmenu.add_cascade(label='load model', menu=loadmenu)
+    for model in blob_list:
+        label = model['model_name'] + '-' + model['created_at']
+        loadmenu.add_command(label=label,
+                             command=partial(load_model,
+                                             model['model_id']))
+else:
+    optmenu.add_command(label='load model', command=None)
+
+optmenu.add_command(label='save model', command=None)
+optmenu.add_command(label='exit', command=root.quit)
 root.config(menu=menubar)
 # end of menu bar
 # end of resizing window
 
 # start main event loop
 if __name__ == '__main__':
-    init_url = 'http://127.0.0.1:8080/api/'
-    print('init request url {0}'.format(init_url))
-
-    r = requests.get(init_url)
-    print(r.json())
+    print(pool_response)
 
     root.mainloop()

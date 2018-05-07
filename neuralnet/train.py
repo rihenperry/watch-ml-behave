@@ -93,12 +93,14 @@ class Model:
 
         if model_name is not None:
             model_path = CONFIG_PATH + model_name
+            print(model_path)
         else:
             model_path = CONFIG_PATH + 'default.pki'
 
         with open(model_path, 'rb') as file:
             loaded_model = pickle.load(file)
-
+            print('nn ', loaded_model)
+        print('mdl.load() ', loaded_model)
         return loaded_model
 
     def save(self):
