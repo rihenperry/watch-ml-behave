@@ -5,7 +5,7 @@ from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 from PIL import Image, ImageTk
 
-from graphing import update_prediction_graph
+from graphing import update_prediction_graph, update_model_performance_graph, update_lr_vs_p, update_epoch_vs_p, update_hn_vs_p
 
 imglabel = None
 img_name = None
@@ -53,3 +53,45 @@ def load_model(var):
 
     loaded_obj = requests.get(load_url).json()
     print('active model {0}'.format(loaded_obj))
+
+
+global lr, epoch, hn
+
+
+def lr_knob(val):
+    global lr
+    lr = round(float(val), 2)
+
+
+def epoch_knob(val):
+    global epoch
+    epoch = int(float(val))
+
+
+def hn_knob(val):
+    global hn
+    hn = int(float(val))
+
+
+def configure():
+    print(lr, epoch, hn)
+    training_url = 'http://127.0.0.1:8080/api/model/tune'
+
+    payload = {'lr': lr, 'epoch': epoch, 'hn': hn}
+    r = requests.post(training_url, data=payload)
+    print(r.json())
+
+    update_model_performance_graph(r.json())
+    update_lr_vs_p(r.json())
+    update_epoch_vs_p(r.json())
+    update_hn_vs_p(r.json())
+
+
+def save_model():
+    import uuid
+    save_url = 'http://127.0.0.1:8080/api/model/save'
+
+    name = uuid.uuid4().hex
+    payload = {'model_name': name[:5]}
+    r = requests.post(save_url, data=payload)
+    print(r.json())

@@ -6,7 +6,7 @@ from functools import partial
 import extendedgui
 from graphing import prediction_graph, model_performance_graph
 from graphing import lr_p_graph, epoch_p_graph, hn_p_graph
-from actions import load_model
+from actions import load_model, save_model
 
 # variables
 pool_response = None
@@ -71,6 +71,7 @@ hn_p_graph(hn_vs_p_frame, pool_response)
 bottom_rht_frame = ttk.Frame(master_frame, relief="groove", borderwidth=2, width=750, height=290)
 bottom_rht_frame.rowconfigure(0, weight=1)
 bottom_rht_frame.rowconfigure(1, weight=3)
+bottom_rht_frame.rowconfigure(2, weight=3)
 bottom_rht_frame.columnconfigure(0, weight=1)
 bottom_rht_frame.columnconfigure(1, weight=3)
 bottom_rht_frame.columnconfigure(2, weight=3)
@@ -126,9 +127,10 @@ if pool_response:
 else:
     optmenu.add_command(label='load model', command=None)
 
-optmenu.add_command(label='save model', command=None)
+optmenu.add_command(label='save model', command=save_model)
 optmenu.add_command(label='exit', command=root.quit)
 root.config(menu=menubar)
+root.update()
 # end of menu bar
 # end of resizing window
 
