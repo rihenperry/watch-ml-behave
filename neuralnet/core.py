@@ -1,12 +1,10 @@
 # 3 layer neural network and learning/training on MNIST dataset
 
 import os
-import numpy
-# scipy.special for the sigmoid function expit()
-import scipy.special
-# library for plotting arrays
-import matplotlib.pyplot
-# ensure the plots are inside this file, not an external window
+import numpy  # scipy.special for the sigmoid function expit()
+import scipy.special  # library for plotting arrays
+import matplotlib.pyplot  # ensure the plots are inside this file,
+# not an external window
 
 
 # neural network class definition

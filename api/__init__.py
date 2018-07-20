@@ -24,6 +24,7 @@ from . import controllers
 # register blueprint
 app.register_blueprint(endpoint, url_prefix="/api")
 
+
 # Sample HTTP error handling
 @app.errorhandler(404)
 def not_found(error):
