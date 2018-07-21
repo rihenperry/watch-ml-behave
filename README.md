@@ -48,7 +48,7 @@ term2$ python tkgui/main.py
 ```
 
 # development and goals
-* to change the way the app is launched. Dockerize the service layer.
+* to change the way the app is launched. Dockerize the service layer using AWS as prod.
 * change from REST to RPC communication mechanism.
 * reduce app launch time
 * develop alternative UIs like webui, cli
