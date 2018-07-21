@@ -1,6 +1,8 @@
 # watch-ml-behave
 Elementary handwritten digit and alphabet classifier using supervised learning as part of the class COMP 549 - Human Computer Interaction. The main objective was to put into practice design principles taught in the class.
 
+![](handwritten.gif)
+
 # The GUI walkthorough
 The app is structured into 4 panes. The left side has 3 panes and right side 3 panes.
 * The upper-left pane is the object you want to test/analyze.
@@ -48,7 +50,7 @@ term2$ python tkgui/main.py
 ```
 
 # development and goals
-* to change the way the app is launched. Dockerize the service layer.
+* to change the way the app is launched. Dockerize the service layer and use AWS as remote machine.
 * change from REST to RPC communication mechanism.
 * reduce app launch time
 * develop alternative UIs like webui, cli
