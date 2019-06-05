@@ -1,6 +1,8 @@
 # watch-ml-behave
 Elementary handwritten digit and alphabet classifier using supervised learning as part of the class COMP 549 - Human Computer Interaction. The main objective was to put into practice design principles taught in the class.
 
+![](hci_project.png)
+
 ![](handwritten.gif)
 
 # The GUI walkthorough
